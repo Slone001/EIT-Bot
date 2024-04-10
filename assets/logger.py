@@ -28,7 +28,7 @@ def logger_fun():
                                                'INFO': 'green',
                                                'WARNING': 'yellow',
                                                'ERROR': 'red',
-                                               'CRITICAL': 'red,bg_white',
+                                               'CRITICAL': 'red',
                                                'IMPORTANT': 'blue',
                                                'CHANNELS': 'purple',
                                                'reset': 'white'})

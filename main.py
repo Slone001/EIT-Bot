@@ -1,4 +1,6 @@
 import os
+import time
+
 import discord
 from discord.ext import commands
 import asyncio
@@ -39,8 +41,19 @@ bot = commands.Bot(
 
 def main():
     global logger
-    Config = json.load()
+    try:
+        with open(f"{assets.files}{assets.cfg}") as file:
+            Config = json.load(file)
+    except json.decoder.JSONDecodeError as e:
+        logger.critical(e)
+        logger.critical(f"Config file is damaged, please delete the file or repair it")
+        time.sleep(5)
+        exit()
     bot_token = Config["Token"]
+    if bot_token == "":
+        logger.critical(f"no token is entered in config-file")
+        time.sleep(5)
+        exit()
     logger.info(f"Bot is starting")
     logger.info(f"Bot prefix is {bot_prefix}")
     asyncio.run(bot_start(bot_token))
@@ -71,16 +84,21 @@ async def slash_cogs():
 
 if __name__ == '__main__':
     global logger
-    assets.logger_fun()
-    logger = logging.getLogger("Basic_Logger")
     if not os.path.exists(assets.files):
         os.mkdir(assets.files)
     if not os.path.exists(assets.Logs):
         os.mkdir(assets.Logs)
+    assets.logger_fun()
+    logger = logging.getLogger("Basic_Logger")
     if not os.path.isfile(path=f"{assets.files}{assets.cfg}"):
         with open(f"{assets.files}{assets.cfg}", "w") as file:
             file.write(assets.config_blueprint())
         logger.critical(f"No token in {assets.files}{assets.cfg}.\nToken is required to start the bot")
+        time.sleep(5)
         exit()
+    if not os.path.isfile(path=f"{assets.files}{assets.data}"):
+        with open(f"{assets.files}{assets.data}", "w") as file:
+            file.write(assets.config_blueprint())
+        logger.warning(f"No data file was found. New data-file will be created")
     main()
 
