@@ -1,0 +1,11 @@
+*.txt
+*.json
+*.log
+*.idea/
+*.venv/
+*__pycache__/
+*assets/__pycache__/
+*/config/
+*/logs/
+!Planung.txt
+*logs/
