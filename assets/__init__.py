@@ -3,10 +3,8 @@ from .blueprints import *
 from .Cogs import *
 
 
-
-
 Logs = "Logs/"
-files = "config/"
+files = "files/"
 cfg = "config.json"
 data = "data.json"
 

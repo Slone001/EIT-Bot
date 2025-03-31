@@ -1,3 +1,4 @@
-from .remove_old_ranks import *
+from .Se_reset import *
+from .admin import *
 
 permission_roles = 1032012933116481647
