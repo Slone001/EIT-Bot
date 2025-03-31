@@ -7,7 +7,8 @@ def config_blueprint():
     return json_obj
 
 
-def data_blueprint():
-    data_str = [{"typ": "default_roles", "default_roles": []}, {"typ": "news_channel", "id": ""},
-                {"type": "reaction_channel", "id": ""}, {"type": "Admin", "roles": []}]
-
+def data_blueprint() -> list:
+    data_str = [{"typ": "default_roles", "roles": []}, {"typ": "admin_roles", "roles": []},
+                {"typ": "news_channel", "id": ""}, {"typ": "reaction_channel", "id": ""},
+                {"typ": "log_channel", "id": ""}]
+    return data_str

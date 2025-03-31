@@ -1,6 +1,5 @@
 import os
 import time
-
 import discord
 from discord.ext import commands
 import asyncio
@@ -15,13 +14,12 @@ import json
 
 bot_prefix = None
 if sys.platform == "win32":
-    bot_prefix = "§test "
-elif sys.platform == "linux":
     bot_prefix = "!test "
+elif sys.platform == "linux":
+    bot_prefix = "!EIT "
 else:
     bot_prefix = "test "
     print(f"Loaded prefix for {sys.platform}. Prefix is {bot_prefix}")
-
 
 """ Bot Starting """
 
@@ -76,7 +74,9 @@ async def on_ready():
 
 
 async def cogs_loader():
-    pass
+    await assets.admin_setup(bot)
+    await assets.role_reset_setup(bot)
+
 
 async def slash_cogs():
     pass
@@ -98,7 +98,10 @@ if __name__ == '__main__':
         exit()
     if not os.path.isfile(path=f"{assets.files}{assets.data}"):
         with open(f"{assets.files}{assets.data}", "w") as file:
-            file.write(assets.config_blueprint())
+            json.dump(assets.data_blueprint(), file)
         logger.warning(f"No data file was found. New data-file will be created")
     main()
+
+
+
 
