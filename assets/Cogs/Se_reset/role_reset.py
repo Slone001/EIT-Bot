@@ -5,6 +5,7 @@ from discord.ext import commands
 from discord.ext.commands import Context
 import assets
 import logging
+import datetime
 
 
 class role_reset(commands.Cog):
@@ -36,36 +37,35 @@ class role_reset(commands.Cog):
                 if entry["typ"] == "log_channel":
                     self.log_channel_id = int(entry["id"])
 
-
-
     @commands.command(name="reset_ranks", aliases=["rr"])
     @commands.has_any_role("Admin")
     async def rank_reset(self, ctx: Context):
-        # todo: create backup log file for old roles
+        self.logger.info(f"Role reset activated by {ctx.author}")
         guild = ctx.guild
         guild_member = guild.members
         guild_roles = guild.roles
-        print(self.standard_roles)
         remove_roles = [i for i in guild_roles if i.id not in self.standard_roles]
+        filename = f"role_reset_{datetime.datetime.now().strftime("%Y_%m_%d %H,%M,%S")}.csv"
+        file = open(f"{assets.Logs}{filename}", "a")
         del remove_roles[0]
-        print(remove_roles)
         for member in guild_member:
             if not member.bot:
-                print(member)
                 user_remove_roles = []
                 for role in member.roles:
                     if role in remove_roles:
                         user_remove_roles.append(role)
-                print(user_remove_roles)
+                        file.write(f"{member.name}, {member.id}, {role.name}, {role.id}\n")
                 await member.remove_roles(*user_remove_roles)
                 await asyncio.sleep(1)
 
+        file.close()
         news_channel = self.bot.get_channel(self.news_channel_id)
         rr_chanel = self.bot.get_channel(self.reaction_role_channel_id)
         log_channel = self.bot.get_channel(self.log_channel_id)
         await news_channel.send(f"Die Semester-Rollen wurden zurückgesetzt. Bitte weise dir die Passenden Rollen in "
                                 f"dem Channel {rr_chanel.mention} ab")
         await log_channel.send(f"Die Semester-Rollen wurden von {ctx.author.name} zurückgesetzt.")
+        self.logger.info("Role reset finished")
 
 
 async def role_reset_setup(bot):
