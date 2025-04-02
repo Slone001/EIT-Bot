@@ -68,7 +68,7 @@ class role_reset(commands.Cog):
             else:
                 channels += f", {rr_chanel.mention}"
         await news_channel.send(f"Die Semester-Rollen wurden zurückgesetzt. Bitte weise dir die passenden Rollen für "
-                                f"das kommende in dem Channel {channels} zu")
+                                f"das kommende Semester in den Kanälen {channels} zu")
         await log_channel.send(f"Die Semester-Rollen wurden von {ctx.author.name} zurückgesetzt.")
         self.logger.info("Role reset finished")
 
