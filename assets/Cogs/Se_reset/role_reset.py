@@ -1,6 +1,5 @@
 import asyncio
 import json
-import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 import assets
@@ -13,10 +12,9 @@ class role_reset(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.logger = logging.getLogger("Basic_Logger")
-        # self.standard_roles: standard roles on discord-server, which shouldn't removed with command reset_ranks
         self.standard_roles: list[int]
         self.news_channel_id: int
-        self.reaction_role_channel_id: int
+        self.reaction_role_channel_id: list[int]
         self.log_channel_id: int
         with open("files/data.json", "r") as f:
             data = json.load(f)
@@ -32,7 +30,7 @@ class role_reset(commands.Cog):
                     self.news_channel_id = int(entry["id"])
                     continue
                 if entry["typ"] == "reaction_channel":
-                    self.reaction_role_channel_id = int(entry["id"])
+                    self.reaction_role_channel_id = entry["id"]
                     continue
                 if entry["typ"] == "log_channel":
                     self.log_channel_id = int(entry["id"])
@@ -41,6 +39,7 @@ class role_reset(commands.Cog):
     @commands.has_any_role("Admin")
     async def rank_reset(self, ctx: Context):
         self.logger.info(f"Role reset activated by {ctx.author}")
+        await ctx.channel.send(f"Role reset activated by {ctx.author.name}")
         guild = ctx.guild
         guild_member = guild.members
         guild_roles = guild.roles
@@ -60,10 +59,16 @@ class role_reset(commands.Cog):
 
         file.close()
         news_channel = self.bot.get_channel(self.news_channel_id)
-        rr_chanel = self.bot.get_channel(self.reaction_role_channel_id)
         log_channel = self.bot.get_channel(self.log_channel_id)
-        await news_channel.send(f"Die Semester-Rollen wurden zurückgesetzt. Bitte weise dir die Passenden Rollen in "
-                                f"dem Channel {rr_chanel.mention} ab")
+        channels: str = ""
+        for channel_id in self.reaction_role_channel_id:
+            rr_chanel = self.bot.get_channel(channel_id)
+            if channels == "":
+                channels += f"{rr_chanel.mention}"
+            else:
+                channels += f", {rr_chanel.mention}"
+        await news_channel.send(f"Die Semester-Rollen wurden zurückgesetzt. Bitte weise dir die passenden Rollen für "
+                                f"das kommende in dem Channel {channels} zu")
         await log_channel.send(f"Die Semester-Rollen wurden von {ctx.author.name} zurückgesetzt.")
         self.logger.info("Role reset finished")
 
