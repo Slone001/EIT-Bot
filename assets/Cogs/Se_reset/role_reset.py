@@ -55,7 +55,6 @@ class role_reset(commands.Cog):
                         user_remove_roles.append(role)
                         file.write(f"{member.name}, {member.id}, {role.name}, {role.id}\n")
                 await member.remove_roles(*user_remove_roles)
-                await asyncio.sleep(1)
 
         file.close()
         news_channel = self.bot.get_channel(self.news_channel_id)
