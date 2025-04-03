@@ -44,7 +44,7 @@ class role_reset(commands.Cog):
         guild_member = guild.members
         guild_roles = guild.roles
         remove_roles = [i for i in guild_roles if i.id not in self.standard_roles]
-        filename = f"role_reset_{datetime.datetime.now().strftime("%Y_%m_%d %H,%M,%S")}.csv"
+        filename = f"role_reset_{datetime.datetime.now().strftime('%Y_%m_%d %H,%M,%S')}.csv"
         file = open(f"{assets.Logs}{filename}", "a")
         del remove_roles[0]
         for member in guild_member:
