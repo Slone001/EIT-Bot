@@ -50,7 +50,6 @@ class Admin(commands.Cog):
                     file.update(new)
             except Exception as a:
                 print(a)
-                print(3)
                 file = [{"typ": "default_roles", "roles": [{"name": role.name, "id": role.id}]}]
                 print(file)
             f.write(json.dumps(file))
